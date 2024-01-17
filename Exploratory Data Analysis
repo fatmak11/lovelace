@@ -219,3 +219,74 @@ def age_distribution(data):
     
 age_distribution(df)
 
+4-7 age vs multiple features for condition
+
+def numeric_features_vs_age(data): 
+    """
+    Effects of features for heart disease by age
+    """
+    benign = data.Condition==0
+    malignant = data.Condition==1
+    
+    age_benign = data.Age[benign]
+    age_malignant = data.Age[malignant]
+    
+    b_color = 'MediumSeaGreen'
+    m_color = 'LightCoral'
+    
+    fig = plt.figure(figsize=(12, 10))
+plt.subplot(2, 2, 1)
+    plt.scatter(x=age_benign, y=data.Resting_bp[benign], color=b_color)
+    plt.scatter(x=age_malignant, y=data.Resting_bp[malignant], color=m_color)
+    plt.title('Resting_bp vs. age', fontsize=15)
+    plt.legend(['Benign', 'Malignant'])
+    plt.xlabel('age', fontsize=10)
+    plt.ylabel('Resting blood pressure (mmHg)', fontsize=10)
+
+serum cholesterol
+    plt.subplot(2, 2, 2)
+    plt.scatter(x=age_benign, y=data.Cholesterol[benign], color=b_color)
+    plt.scatter(x=age_malignant, y=data.Cholesterol[malignant], color=m_color)
+    plt.title('Serum cholesterol (mg/dl)', fontsize=15)
+    plt.legend(['Benign', 'Malignant'])
+
+maximum heart rate achieved
+    plt.subplot(2, 2, 3)
+    plt.scatter(x=age_benign, y=data.Max_heart_rate[benign], color=b_color)
+    plt.scatter(x=age_malignant, y=data.Max_heart_rate[malignant], color=m_color)
+    plt.title('Max_heart_rate vs. age', fontsize=15)
+    plt.legend(['Benign', 'Malignant'])
+    plt.xlabel('age',fontsize=10)
+    plt.ylabel('Maximum heart rate achieved (bpm)', fontsize=10)
+
+st depression
+plt.subplot(2, 2, 4)
+    plt.scatter(x=age_benign, y=data.ST_depression[benign], color=b_color)
+    plt.scatter(x=age_malignant, y=data.ST_depression[malignant], color=m_color)
+    plt.title('ST_depression vs. age', fontsize=15)
+    plt.legend(['Benign', 'Malignant'])
+    plt.xlabel('age',fontsize=10)
+    plt.ylabel('ST_depression', fontsize=10)   
+            
+    plt.tight_layout()
+    plt.show()
+
+
+numeric_features_vs_age(df);
+
+4-8 feature vs feature condition
+sns.pairplot(df[['Resting_bp','Cholesterol','Max_heart_rate','ST_depression','Age', 'Condition']],hue='Condition', palette='Dark2');
+
+4-9 correlations
+def correlation_heatmap(data):
+    """
+    Correlation Heat Map of the features.
+    """
+    plt.figure(figsize=(11, 7))
+    sns.heatmap(data.corr(), annot=True, linewidth=0.2, 
+                fmt='.2f', cmap='RdGy_r')
+    plt.title('Correlations between Features', fontsize=15)
+    plt.show()
+    
+    
+correlation_heatmap(df);
