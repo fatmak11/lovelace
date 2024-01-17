@@ -66,6 +66,89 @@ def symptoms_features_sex(data):
     
     
 symptoms_features_sex(df);
+condition_ratio(df);
+def sex_ratio(data):
+    results = data['Sex'].value_counts()
+    values = [results[0], results[1]]
+    labels = ['Female', 'Male']
+    colors = ['Red', 'RoyalBlue']
+    
+    fig_pie = go.Pie(labels=labels, values=values, 
+                     marker={'colors': colors, 
+                             'line': {'color': 'Black', 'width': 2}})
+    py.iplot([fig_pie])
+    return py
+def condition_proportion_sex(data):
+    
+    data['Sex'].groupby(data['Condition']).value_counts(normalize=True).rename('proportion').reset_index().pipe((sns.barplot, 'data'), x='Sex', y='proportion', hue='Condition', palette='Dark2');
+    plt.title('Proportion of Condition for Sex')
+    plt.xlabel('Sex (0 = Female, 1 = Male)')
+    plt.show()
+    
+    
+    # Show the percentage of Malignant for Sex
+    # female_malignant vs. Malignant
+    female_malignant = data[data['Sex']==0]['Condition'].sum()/data[data['Condition']==1]['Condition'].count()
+    # male_malignant vs. Malignant
+    male_malignant = data[data['Sex']==1]['Condition'].sum()/data[data['Condition']==1]['Condition'].count()
+
+    print('The proportion of Malignant for Sex:')
+    print(f'Female: {female_malignant:.2%}')
+    print(f'Male: {male_malignant:.2%}')
+
+    
+condition_proportion_sex(df);
+def risk_factors_dist_condition(data):
+    """
+    Show distributions of risk factors for each condition
+    """
+    fig = plt.figure(figsize=(18, 8))
+    
+    # Resting blood pressure distribution for each condition
+    plt.subplot(2, 3, 1)
+    trestbps_b = data[data['Condition']==0]['Resting_bp']
+    trestbps_m = data[data['Condition']==1]['Resting_bp']
+    sns.distplot(trestbps_b, color='Green')   
+    sns.distplot(trestbps_m, color='Red')
+    plt.title('Resting Blood Pressure (mmHg) Distribution for Condition')
+    plt.gca().legend(title='Condition', labels=['Benign','Malignant'])  
+    plt.axvline(x=130, color='r', linestyle='--', label='Hypertension: over 130 mmHg')
+    
+    plt.subplot(2, 3, 4)
+    sns.boxplot(x=data['Resting_bp'], y=data['Condition'], 
+                orient='h', palette='Dark2')
+    
+    
+    # Serum cholesterol distribution for each condition
+    plt.subplot(2, 3, 2)
+    chol_b = data[data['Condition']==0]['Cholesterol']
+    chol_m = data[data['Condition']==1]['Cholesterol']
+    sns.distplot(chol_b, color='Green')
+    sns.distplot(chol_m, color='Red')
+    plt.title('Serum Cholesterol (mg/dl) Distribution for Condition')
+    plt.gca().legend(title='Condition', labels=['Benign','Malignant'])
+    plt.axvline(x=200, color='r', linestyle='--', label='High Cholesterol: over 200 mg/dl')
+
+    plt.subplot(2, 3, 5)
+    sns.boxplot(x=data['Cholesterol'], y=data['Condition'],
+                orient='h', palette='Dark2')
+    
+    
+    # Max heart rate achieved distribution for each condition
+    plt.subplot(2, 3, 3)
+    thalach_b = data[data['Condition']==0]['Max_heart_rate']
+    thalach_m = data[data['Condition']==1]['Max_heart_rate']
+    sns.distplot(thalach_b, color='Green')
+    sns.distplot(thalach_m, color='Red')
+    plt.title('Max Heart Rate (bpm) Distribution for Condition')
+    plt.gca().legend(title='Condition', labels=['Benign','Malignant'])
+    
+    plt.subplot(2, 3, 6)
+    sns.boxplot(x=data['Max_heart_rate'], y=data['Condition'],
+                orient='h', palette='Dark2')
+    
+    
+risk_factors_dist_condition(df);
 
 #4-5: heart functions for heart disease
 def heart_functions(data):
