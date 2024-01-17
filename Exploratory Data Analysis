@@ -1,0 +1,138 @@
+condition_ratio(df);
+def sex_ratio(data):
+    results = data['Sex'].value_counts()
+    values = [results[0], results[1]]
+    labels = ['Female', 'Male']
+    colors = ['Red', 'RoyalBlue']
+    
+    fig_pie = go.Pie(labels=labels, values=values, 
+                     marker={'colors': colors, 
+                             'line': {'color': 'Black', 'width': 2}})
+    py.iplot([fig_pie])
+    return py
+def condition_proportion_sex(data):
+    
+    data['Sex'].groupby(data['Condition']).value_counts(normalize=True).rename('proportion').reset_index().pipe((sns.barplot, 'data'), x='Sex', y='proportion', hue='Condition', palette='Dark2');
+    plt.title('Proportion of Condition for Sex')
+    plt.xlabel('Sex (0 = Female, 1 = Male)')
+    plt.show()
+    
+    
+    # Show the percentage of Malignant for Sex
+    # female_malignant vs. Malignant
+    female_malignant = data[data['Sex']==0]['Condition'].sum()/data[data['Condition']==1]['Condition'].count()
+    # male_malignant vs. Malignant
+    male_malignant = data[data['Sex']==1]['Condition'].sum()/data[data['Condition']==1]['Condition'].count()
+
+    print('The proportion of Malignant for Sex:')
+    print(f'Female: {female_malignant:.2%}')
+    print(f'Male: {male_malignant:.2%}')
+
+    
+condition_proportion_sex(df);
+
+#4-4: symptoms of heart diseases
+def symptoms_features(data):
+  '''count number of chest_pain_type and exercise_induced angina values'''
+  plt.figure(figsize =(18, 6))
+
+  #chest pain types
+  plt.subplot(1, 2, 1)
+  sns.countplot(x='Chest_pain_type', data=data)
+  plt.title('Chest Pain Types')
+
+  #exercise induced angina
+  plt.subplot(1, 2, 2)
+  sns.countplot(x='Exercise_induced_angina', data=data)
+  plt.title('Exercised Induces Angina')
+
+symptoms_features(df);
+
+def symptoms_features_sex(data):
+    '''plot bar charts of chest pain type and esercise induced angina for sex'''
+    fig = plt.figure(figsize=(18, 6))
+    
+    # Chest pain types for Sex 
+    plt.subplot(1, 2, 1)
+    data['Chest_pain_type'].groupby(data['Sex']).value_counts(normalize=True).rename('proportion').reset_index().pipe((sns.barplot, 'data'), x='Chest_pain_type', y='proportion', hue='Sex', palette='Set1')
+    plt.title('Proportion of Chest pain types for Sex')
+    
+    
+    # Exercise induced angina for Sex
+    plt.subplot(1, 2, 2)
+    data['Exercise_induced_angina'].groupby(data['Sex']).value_counts(normalize=True).rename('proportion').reset_index().pipe((sns.barplot, 'data'), x='Exercise_induced_angina', y='proportion', hue='Sex', palette='Set1')
+    plt.title('Proportion of Exercise induced angina for Sex')
+    plt.show()
+    
+    
+symptoms_features_sex(df);
+
+#4-5: heart functions for heart disease
+def heart_functions(data):
+    """
+    Make a bar chart of Resting_ecg and ST_slope.
+    """
+    plt.figure(figsize=(18, 6))
+
+    # Resting_ecg
+    plt.subplot(1, 2, 1)
+    sns.countplot(x='Resting_ecg', data=data)
+    plt.title('Resting electrocardiographic results')
+
+    # ST_slope
+    plt.subplot(1, 2, 2)
+    sns.countplot(x='ST_slope', data=data)
+    plt.title('The slope of the peak exercise ST segment')
+    plt.show()
+    
+
+heart_functions(df);
+
+#4-6: feature variable for age
+def age_distribution(data):
+    """
+    Make a standard distribution and distributions for Sex
+    """
+    fig = plt.figure(figsize=(15, 7))
+
+    # Age distribution
+    plt.subplot(2, 3, 1)
+    sns.distplot(data['Age']) 
+    plt.title('Age Distribution', fontsize=15)
+
+    plt.subplot(2, 3, 4)
+    sns.boxplot(data['Age'], orient='h')
+    
+
+    # Age distribution for sex
+    plt.subplot(2, 3, 2)
+    female = df[df['Sex']==0]['Age']
+    male = df[df['Sex']==1]['Age']
+    sns.distplot(male, color='Blue', label='Male')
+    sns.distplot(female, color='Red', label='Female')
+    plt.title('Age Distribution (Male vs. Female)', fontsize=15)
+    plt.legend(title='Sex', fontsize=10)
+
+    plt.subplot(2, 3, 5)
+    sns.boxplot(x=data['Age'], y=data['Sex'], orient='h', palette='Set1')
+    
+    
+    # Age distribution for Condition
+    plt.subplot(2, 3, 3)
+    benign = df[df['Condition']==0]['Age']
+    malignant = df[df['Condition']==1]['Age']
+
+    sns.distplot(benign, color='Green', label='Benign')
+    sns.distplot(malignant, color='Red', label='Malignant')
+    plt.title('Age Distribution for Condition', fontsize=15)
+    plt.legend(title='Condition', fontsize=10)
+    
+    plt.subplot(2, 3, 6)
+    sns.boxplot(x=data['Age'], y=data['Sex'], orient='h', palette='Dark2')
+    
+    plt.tight_layout()
+    plt.show()
+
+    
+age_distribution(df)
+
