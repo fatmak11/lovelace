@@ -1,0 +1,60 @@
+import random
+
+def main():
+    # Seed for reproducible results
+    random.seed(42)
+    sample_size = 100
+    
+    # Generate sample data
+    data = {
+        'Sex': [random.choice([0, 1]) for _ in range(sample_size)],  # 0 for Female, 1 for Male
+        'Condition': [random.choice([0, 1]) for _ in range(sample_size)],  # 0 for Benign, 1 for Malignant
+    }
+
+    # Calculate Sex ratio
+    male_count = sum(sex for sex in data['Sex'] if sex == 1)
+    female_count = len(data['Sex']) - male_count
+    total_count = len(data['Sex'])
+    male_percentage = male_count / total_count * 100
+    female_percentage = female_count / total_count * 100
+    
+    # Display Sex ratio bar chart
+    print("Sex Ratio Bar Chart:")
+    display_sex_ratio_bar_chart(male_percentage, female_percentage)
+    
+    # Calculate condition proportion by sex
+    male_condition_counts = {0: 0, 1: 0}
+    female_condition_counts = {0: 0, 1: 0}
+    for sex, condition in zip(data['Sex'], data['Condition']):
+        if sex == 1:
+            male_condition_counts[condition] += 1
+        else:
+            female_condition_counts[condition] += 1
+            
+    # Display condition proportion by sex chart
+    print("\nCondition Proportion by Sex:")
+    display_condition_proportion_by_sex_chart(male_condition_counts, female_condition_counts)
+
+def display_sex_ratio_bar_chart(male_percentage, female_percentage):
+    male_bar = '#' * int(male_percentage // 2)  # Scale down for display
+    female_bar = '#' * int(female_percentage // 2)  # Scale down for display
+    
+    print(f"Male   [{male_bar}] {male_percentage:.2f}%")
+    print(f"Female [{female_bar}] {female_percentage:.2f}%\n")
+
+def display_condition_proportion_by_sex_chart(male_condition_counts, female_condition_counts):
+    print("Male:")
+    for condition, count in male_condition_counts.items():
+        proportion = count / sum(male_condition_counts.values()) * 100
+        bar = '#' * int(proportion // 2)  # Scale down for display
+        print(f"Condition {condition}: [{bar}] {proportion:.2f}%")
+        
+    print("\nFemale:")
+    for condition, count in female_condition_counts.items():
+        proportion = count / sum(female_condition_counts.values()) * 100
+        bar = '#' * int(proportion // 2)  # Scale down for display
+        print(f"Condition {condition}: [{bar}] {proportion:.2f}%")
+
+# Run the main function
+if __name__ == "__main__":
+    main()
